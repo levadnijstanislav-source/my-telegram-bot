@@ -6,9 +6,10 @@ from datetime import timedelta
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 from aiogram.types import ChatPermissions
-from aiohttp import web  # Додаємо веб-сервер для обходу обмежень Render
+from aiohttp import web  # Веб-сервер для обходу обмежень Render
 
-TOKEN = "8429257687:AAFmMnFcwi3C0FADyFhmDrbKy9Exvuo4dLs"
+# Твій новий чистий токен
+TOKEN = "8429257687:AAFXn4J3VHlc94DAEnGQEdvl44etfMtQeLk"
 
 dp = Dispatcher()
 bot = Bot(token=TOKEN)
@@ -22,7 +23,6 @@ async def start_web_server():
     app.router.add_get('/', handle)
     runner = web.AppRunner(app)
     await runner.setup()
-    # Render сам дає порт у змінних оточення, якщо немає — беремо 10000
     port = int(os.getenv("PORT", 10000))
     site = web.TCPSite(runner, '0.0.0.0', port)
     await site.start()
@@ -81,9 +81,7 @@ async def unmute_user(message: types.Message):
 
 async def main() -> None:
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
-    # Запускаємо фоновий веб-сервер для Render
     await start_web_server()
-    # Запускаємо самого бота
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
